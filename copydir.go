@@ -84,28 +84,27 @@ package main
 		 fmt.Println("Please provide a source and destination directory. Aborting.")
 		 os.Exit(1)
 	 }
-
-   fmt.Println("Source: " + source_dir)
-
-   // check if the source dir exist
+   // if source dir doesn't exist
    src, err := os.Stat(source_dir)
    if err != nil {
-      panic(err)
+      fmt.Println("Source directory does not exist. Aborting.")
+			os.Exit(1)
    }
 
+	 // if source is not a directory
    if !src.IsDir() {
      fmt.Println("Source is not a directory.")
      os.Exit(1)
    }
 
-   // create the destination directory
-   fmt.Println("Destination: " + dest_dir)
+	 _, err = os.Open(dest_dir)
+	 if !os.IsNotExist(err) {
+		 fmt.Println("Destination directory already exists. Aborting.")
+		 os.Exit(1)
+	 }
 
-   _, err = os.Open(dest_dir)
-   if !os.IsNotExist(err) {
-     fmt.Println("Destination directory already exists. Aborting.")
-     os.Exit(1)
-   }
+	 fmt.Println("Source: " + source_dir)
+   fmt.Println("Destination: " + dest_dir)
 
    err = CopyDir(source_dir, dest_dir)
    if err != nil {
