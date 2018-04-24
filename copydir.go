@@ -5,6 +5,8 @@ package main
    "flag"
    "fmt"
    "io"
+	 "log"
+	 "path/filepath"
  )
 
  func CopyFile(source string, dest string) (err error) {
@@ -77,13 +79,20 @@ package main
  func main() {
    flag.Parse() // get the source and destination directory
 
-   source_dir := flag.Arg(0) // get the source directory from 1st argument
-   dest_dir := flag.Arg(1) // get the destination directory from the 2nd argument
+	 // get current working directory
+	 cwd, err := filepath.Abs(filepath.Dir(os.Args[0]))
+	  if err != nil {
+	          log.Fatal(err)
+	  }
+
+   source_dir := cwd + "/" + flag.Arg(0) // get the source directory from 1st argument
+   dest_dir := cwd + "/" + flag.Arg(1) // get the destination directory from the 2nd argument
 
 	 if (source_dir == "" || dest_dir == "") {
 		 fmt.Println("Please provide a source and destination directory. Aborting.")
 		 os.Exit(1)
 	 }
+
    // if source dir doesn't exist
    src, err := os.Stat(source_dir)
    if err != nil {
@@ -97,14 +106,14 @@ package main
      os.Exit(1)
    }
 
+	 fmt.Println("Source: " + source_dir)
+		fmt.Println("Destination: " + dest_dir)
+
 	 _, err = os.Open(dest_dir)
 	 if !os.IsNotExist(err) {
 		 fmt.Println("Destination directory already exists. Aborting.")
 		 os.Exit(1)
 	 }
-
-	 fmt.Println("Source: " + source_dir)
-   fmt.Println("Destination: " + dest_dir)
 
    err = CopyDir(source_dir, dest_dir)
    if err != nil {
