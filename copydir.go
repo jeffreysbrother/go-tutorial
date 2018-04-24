@@ -85,10 +85,13 @@ package main
 	          log.Fatal(err)
 	  }
 
-   source_dir := cwd + "/" + flag.Arg(0) // get the source directory from 1st argument
-   dest_dir := cwd + "/" + flag.Arg(1) // get the destination directory from the 2nd argument
+		source := flag.Arg(0)
+		dest := flag.Arg(1)
 
-	 if (source_dir == "" || dest_dir == "") {
+   source_dir := cwd + "/" + source // get the source directory from 1st argument
+   dest_dir := cwd + "/" + dest // get the destination directory from the 2nd argument
+
+	 if (source == "" || dest == "") {
 		 fmt.Println("Please provide a source and destination directory. Aborting.")
 		 os.Exit(1)
 	 }
